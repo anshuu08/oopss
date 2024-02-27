@@ -1,0 +1,67 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Pizza {
+    private String size;
+    private ArrayList<String> toppings;
+
+    public Pizza(String size, ArrayList<String> toppings) {
+        this.size = size;
+        this.toppings = toppings;
+    }
+
+    public double calculateCost() {
+        double basePrice = 10; // Base price for a small pizza
+        if (size.equalsIgnoreCase("medium")) {
+            basePrice = 12;
+        } else if (size.equalsIgnoreCase("large")) {
+            basePrice = 15;
+        }
+
+        // Additional cost for each topping
+        double toppingCost = toppings.size() * 1.5;
+        double totalCost = basePrice + toppingCost;
+        return totalCost;
+    }
+}
+
+public class PizzaBillGenerator {
+    public static double generateBill(ArrayList<Pizza> pizzas) {
+        double totalCost = 0;
+        for (Pizza pizza : pizzas) {
+            totalCost += pizza.calculateCost();
+        }
+        double taxRate = 0.08; // 8% tax rate
+        double totalCostWithTax = totalCost * (1 + taxRate);
+        return totalCostWithTax;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<Pizza> pizzas = new ArrayList<>();
+
+        System.out.print("Enter the number of pizzas: ");
+        int numPizzas = scanner.nextInt();
+        scanner.nextLine(); // Consume newline character
+
+        for (int i = 0; i < numPizzas; i++) {
+            System.out.print("Enter the size of pizza " + (i + 1) + " (small/medium/large): ");
+            String size = scanner.nextLine().toLowerCase();
+
+            System.out.print("Enter toppings for pizza " + (i + 1) + " (comma-separated): ");
+            String[] toppingsArray = scanner.nextLine().split(",");
+            ArrayList<String> toppings = new ArrayList<>();
+            for (String topping : toppingsArray) {
+                toppings.add(topping.trim());
+            }
+
+            Pizza pizza = new Pizza(size, toppings);
+            pizzas.add(pizza);
+        }
+
+        double totalBill = generateBill(pizzas);
+        System.out.printf("Total bill (including tax): $%.2f\n", totalBill);
+
+        scanner.close();
+    }
+}
